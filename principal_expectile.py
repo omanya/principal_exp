@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Feb  1 12:39:25 2017
-
-@author: Maria Osipenko
+author: Maria Osipenko
 
 Principal expectile algorithm from:
     
-Principal Component Analysis in an Asymmetric Norm, N. Tran, M. Osipenko, W. Haerdle, arXiv:1401.3229
+N. Tran, M. Osipenko, W. Haerdle (2014) "Principal Component Analysis in an Asymmetric Norm", http://arxiv.org/abs/1401.3229
 """
 
 import numpy as np
@@ -69,7 +67,7 @@ def psihat(ymat,lab,tau):
 
 #%%      
 def expdir(ymat,psi,tau):
-    """returns the weights of directional expectile
+    """returns the weights of the directional expectile
     """
     
     obs = psi.dot(np.transpose(ymat))
