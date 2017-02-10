@@ -132,7 +132,7 @@ def compare_basis(basis_fix,basis_old):
     
 #%%
 # example:
-# generate a sample from a mixture of normals
+# generate a multivariate sample from a mixture of normals
 np.random.seed(1234)#set the seed
 n,p,fvar1,fvar2,mix_prob = 1000,20,8,4,0.8 #dimensions, factor variance, mixing probability
 scr1 = fvar1*np.random.randn(n) #factor scores on f1
@@ -148,26 +148,24 @@ for i in range(n):
 #%%
 import matplotlib.pyplot as plt
 
-tau = 0.99 #estimate principal directions for these expectile levels
-ax1 = plt.subplot(111)
-np.random.seed(1234)
-psi,_ = prdir(yfactor,tau,iter_tol=10) 
-target_f = f1
-true = ax1.plot(target_f,color="r",ls="-",label = "true f1") #real basis
-est = ax1.plot(compare_basis(target_f,psi),color="g",ls="--",label = "estimate for tau ="+str(tau)) #estimator
-handles, labels = ax1.get_legend_handles_labels()
-ax1.legend(handles, labels)   
-# the principal expectile algorithm correctly finds f1 as the direction 
-#of the major variation in the extremes whereas the first principal component picks f2
+taus = [0.99,0.5] #estimate principal directions for these expectile levels; 0.5 equivalent to PCA
+f,nam = np.vstack((f1,f2)),["f1","f2"]
+#plot parameters
+cols=[["r","g"],["m","b"]]
+lins=[["-","--"],["-","--"]]
 
-tau = 0.5 #equivalent to pca
-ax2 = plt.subplot(111)
-np.random.seed(1234)
-psi,_ = prdir(yfactor,tau,iter_tol=10) 
-target_f = f2
-true = ax2.plot(target_f,color="m",ls="-",label = "true f2") #real basis
-est = ax2.plot(compare_basis(target_f,psi),color="b",ls="--",label = "estimate for tau ="+str(tau)) #estimator
-handles, labels = ax2.get_legend_handles_labels()
-ax2.legend(handles, labels)
+for i in range(len(taus)):
+    tau=taus[i]
+    np.random.seed(1234+i)
+    psi,_ = prdir(yfactor,tau,iter_tol=10) #estimator for principal direction
+    target_f,col,lin = f[i],cols[i],lins[i]
+    ax1 = plt.subplot(111)
+    true = ax1.plot(target_f,color=col[0],ls=lin[0],label = "true"+nam[i]) #real basis
+    est = ax1.plot(compare_basis(target_f,psi),color=col[1],ls=lin[1],label = "estimate for tau ="+str(tau)) #estimator
+    handles, labels = ax1.get_legend_handles_labels()
+    ax1.legend(handles, labels)   
     
- 
+""" the principal expectile algorithm should find f1 as the direction of the 
+major variation in the extremes while the PCA picks f2 as the first principal 
+component 
+"""
